@@ -23,10 +23,16 @@ question=st.text_input("Ask any question related to the document(s) uploaded")
 
 if question:
     with st.spinner("Generating answer..."):
-        answer,sources =ask_question(question)
+        answer, sources, retrieval_score, context_length, answer_quality = ask_question(question)
 
     st.write("### Answer")
     st.write(answer)
+
     st.write("### Sources")
     for source in sources:
         st.write(source)
+    
+    st.write("### Evaluation metrics")
+    st.write(f"Retrieval Score:{retrieval_score:.2f}")
+    st.write(f"Context Length:{context_length}")
+    st.write(f"Answer Quality : {answer_quality}")

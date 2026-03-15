@@ -3,6 +3,7 @@ from ingestion.text_splitter import split_documents
 from vectorstore.faiss_store import create_vector_store,load_vector_store
 from chains.qa_chain import get_qa_chain
 from utils.logger import get_logger
+from evaluation.rag_evaluator import (evaluate_retrieval,evaluate_context_length,evaluate_answer)
 
 logger = get_logger(__name__)
 
@@ -35,6 +36,8 @@ def ask_question(question):
 
     #3.Get QA Chain
     docs = retriever.invoke(question)
+    retrieval_score = evaluate_retrieval(question,docs)
+    context_length = evaluate_context_length(docs)
     logger.info(f"Retrieved {len(docs)} relevant chunks")
     #4.Generate answer
     chain = get_qa_chain()
@@ -56,5 +59,6 @@ def ask_question(question):
         sources.append(f"{source} - page {page}")
 
     sources = list(set(sources))
+    answer_quality = evaluate_answer(answer)
 
-    return answer, sources
+    return answer, sources,retrieval_score,context_length,answer_quality
