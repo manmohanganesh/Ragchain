@@ -23,7 +23,10 @@ question=st.text_input("Ask any question related to the document(s) uploaded")
 
 if question:
     with st.spinner("Generating answer..."):
-        answer=ask_question(question)
+        answer,sources =ask_question(question)
 
     st.write("### Answer")
     st.write(answer)
+    st.write("### Sources")
+    for source in sources:
+        st.write(source)
